@@ -9,7 +9,7 @@ const lock_count           => 10;
 field count => 0;
 field 'mtime';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub storage_directory {
     $self->plugin_directory;
@@ -70,11 +70,21 @@ sub page_stats {
     $self->write_page_count;
     $self->touch_ctime;
     $self->unlock;
-    return {
-        count => $self->count,
-        ctime => $self->file_ctime,
-        $self->mtime ? (mtime => scalar gmtime($self->mtime)) : ()
-    };
+    if ($self->hub->have_plugin('time_zone')) {
+        return {
+            count => $self->count,
+            ctime => $self->hub->time_zone->format(
+                io($self->ctime_file)->file->ctime),
+            $self->mtime ?
+                (mtime => $self->hub->time_zone->format($self->mtime)) : ()
+        };
+    } else {
+        return {
+            count => $self->count,
+            ctime => $self->file_ctime,
+            $self->mtime ? (mtime => scalar gmtime($self->mtime)) : ()
+        };
+    }
 }
 
 sub ctime_file {
@@ -117,7 +127,14 @@ Kwiki::PageStats - Count and show page hits with a hook.
 =head1 DESCRIPTION
 
 Kwiki::PageStats shows a count of how many times a page has been 
-viewed.
+viewed since the installation of the plugin and when the last hit 
+on the page was made.
+
+=head CREDITS
+
+Thanks to Henry Laxen for a patch that uses the TimeZone plugin,
+if present, to show the times relative to the current users time
+zone.
 
 =head1 AUTHORS
 
