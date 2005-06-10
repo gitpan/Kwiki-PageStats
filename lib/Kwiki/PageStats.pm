@@ -1,6 +1,6 @@
 package Kwiki::PageStats;
-use Kwiki::Plugin '-Base';
-use Kwiki::Installer '-base';
+use Kwiki::Plugin -Base;
+use mixin 'Kwiki::Installer';
 
 const class_id             => 'page_stats';
 const class_title          => 'PageStats';
@@ -9,7 +9,7 @@ const lock_count           => 10;
 field count => 0;
 field 'mtime';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub storage_directory {
     $self->plugin_directory;
@@ -21,14 +21,30 @@ sub register {
                    template => 'page_stats.html',
                    show_for => 'display',
                   );
+    $registry->add(toolbar => 'Page Status',
+                   template => 'page_stats_button.html',
+                   show_for => 'display'
+                  );
+    $registry->add(action => 'page_stats_list');
+
     $registry->add(preference => $self->show_page_stats);
+}
+
+sub page_stats_list {
+    my @pages = sort {
+	$b->{hits} <=> $a->{hits}
+    } map {
+	$_->{hits} = io->catfile($self->plugin_directory,$_->id)->all;
+	$_;
+    } $self->pages->all;
+    $self->render_screen(pages => \@pages);
 }
 
 sub show_page_stats {
     my $p = $self->new_preference('show_page_stats');
     $p->query('Show hits in status bar?');
     $p->type('boolean');
-    $p->default(1);
+     $p->default(1);
     return $p;
 }
 
@@ -130,11 +146,16 @@ Kwiki::PageStats shows a count of how many times a page has been
 viewed since the installation of the plugin and when the last hit 
 on the page was made.
 
-=head CREDITS
+=head1 CREDITS
 
-Thanks to Henry Laxen for a patch that uses the TimeZone plugin,
-if present, to show the times relative to the current users time
+Henry Laxen provided a patch that uses the TimeZone plugin, if
+present, to show the times relative to the current users time
 zone.
+
+Gugod (Kang-min Liu) provided a patch to add a page_stats_list
+action that reports on the number of hits for all pages. Which
+is a nicely handy way to get an overview of how much action your
+wiki is seeing.
 
 =head1 AUTHORS
 
@@ -152,6 +173,19 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
+__template/tt2/page_stats_button.html__
+<a href="[% script_name %]?action=page_stats_list">
+Page Stats
+</a>
+__template/tt2/page_stats_content.html__
+<table class="page_stats">
+[% FOR page = pages %]
+<tr>
+<td class="page_name">[% page.kwiki_link %]</td>
+<td class="page_hits">[% page.hits %]</td>
+</tr>
+[% END %]
+</table>
 __template/tt2/page_stats.html__
 <!-- BEGIN page_stats -->
 [% page_info = hub.page_stats.page_stats %]
