@@ -1,12 +1,12 @@
 name: Kwiki-PageStats
-version: 0.03
+version: 0.04
 abstract: Keep a count of page display, and display it
 author: Chris Dent <cdent@burningchrome.com>
 license: perl
 distribution_type: module
 requires:
   Kwiki: 0.37
-  Kwiki::Test: 0
+  Kwiki::Test: 0.03
 no_index:
   directory:
     - inc

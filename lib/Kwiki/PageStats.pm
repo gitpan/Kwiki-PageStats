@@ -9,7 +9,7 @@ const lock_count           => 10;
 field count => 0;
 field 'mtime';
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub storage_directory {
     $self->plugin_directory;
@@ -31,12 +31,16 @@ sub register {
 }
 
 sub page_stats_list {
-    my @pages = sort {
-	$b->{hits} <=> $a->{hits}
-    } map {
-	$_->{hits} = io->catfile($self->plugin_directory,$_->id)->all;
-	$_;
-    } $self->pages->all;
+    my @pages;
+    for my $page ($self->pages->all) {
+        my $io_file = io->catfile($self->plugin_directory, $page->id);
+        if ($io_file->exists) {
+            $page->{hits} = $io_file->all;
+            push @pages, $page;
+        }
+    }
+    @pages = sort {$b->{hits} <=> $a->{hists}} @pages;
+
     $self->render_screen(pages => \@pages);
 }
 

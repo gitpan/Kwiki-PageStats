@@ -1,4 +1,14 @@
 ---
+version: 0.04
+date: Tue Jun 12 23:15:53 PDT 2005
+changes:
+- Handle when a page stats info does not yet exist
+---
+version: 0.03
+date: Mon Jun 12 23:15:53 PDT 2005
+changes:
+- From Gugod: provide a page stats summary page
+---
 version: 0.02
 date: Wed Apr 27 01:30:47 PDT 2005
 changes:
