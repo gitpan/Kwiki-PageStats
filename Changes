@@ -1,4 +1,9 @@
 ---
+version: 0.05
+date: Tue Jun 12 23:15:53 PDT 2005
+changes:
+- Fix stupid typo in sorting
+---
 version: 0.04
 date: Tue Jun 12 23:15:53 PDT 2005
 changes:

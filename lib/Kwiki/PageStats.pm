@@ -9,7 +9,7 @@ const lock_count           => 10;
 field count => 0;
 field 'mtime';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub storage_directory {
     $self->plugin_directory;
@@ -39,7 +39,7 @@ sub page_stats_list {
             push @pages, $page;
         }
     }
-    @pages = sort {$b->{hits} <=> $a->{hists}} @pages;
+    @pages = sort {$b->{hits} <=> $a->{hits}} @pages;
 
     $self->render_screen(pages => \@pages);
 }
