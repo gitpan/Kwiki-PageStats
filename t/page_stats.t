@@ -25,7 +25,7 @@ sub test_it {
     $pages->current($page);
     my $output = $display->display;
     isnt($output, '', "we got some output");
-    like($output, qr{$count \Qhit(s) since}, "output contains ok hits text");
+    like($output, qr{$count hits? since}, "output contains $count hits text");
 
     # XXX this is to make sure we have a different Template Stash next
     # time through

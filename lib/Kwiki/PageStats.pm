@@ -9,7 +9,7 @@ const lock_count           => 10;
 field count => 0;
 field 'mtime';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub storage_directory {
     $self->plugin_directory;
@@ -135,7 +135,7 @@ sub lock {
 
 sub unlock {
     rmdir($self->lock_directory) or
-      die "unable to page count locking directory";
+      die "unable to remove page count locking directory";
 }
 
 __DATA__
@@ -154,7 +154,8 @@ on the page was made.
 
 Henry Laxen provided a patch that uses the TimeZone plugin, if
 present, to show the times relative to the current users time
-zone.
+zone. Henry has also provided an icon for the menu bar and some
+grammar fixes in the output.
 
 Gugod (Kang-min Liu) provided a patch to add a page_stats_list
 action that reports on the number of hits for all pages. Which
@@ -178,9 +179,13 @@ it under the same terms as Perl itself.
 
 =cut
 __template/tt2/page_stats_button.html__
-<a href="[% script_name %]?action=page_stats_list">
-Page Stats
+<a href="[% script_name %]?action=page_stats_list" title="Page Stats">
+[% INCLUDE page_stats_button_icon.html %]
 </a>
+__template/tt2/page_stats_button_icon.html__
+<!-- BEGIN page_stats_button_icon.html -->
+<img src="icons/gnome/image/page_stats.png" alt="Page Stats" />
+<!-- END page_stats_button_icon.html -->
 __template/tt2/page_stats_content.html__
 <table class="page_stats">
 [% FOR page = pages %]
@@ -196,10 +201,15 @@ __template/tt2/page_stats.html__
 [% IF page_info.count %]
 <div style="font-family:Helvetica,Arial,sans-serif; font-size:small;"
      id="page_stats">
-[% page_info.count %] hit(s) since [% page_info.ctime %].
+[% page_info.count %] hit[% IF page_info.count > 1 %]s[% END %] since [% page_info.ctime %].
 [% IF page_info.mtime %]
 Last hit at [% page_info.mtime %]
 [% END %]
 </div>
 [% END %]
 <!-- END page_stats -->
+__icons/gnome/image/page_stats.png__
+iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAAAmJLR0QAAKqN
+IzIAAAAJcEhZcwAAAEgAAABIAEbJaz4AAABTSURBVBjTfZBLDgAxCEKBzMU8
+uUezm06q9uNK85AQiMBlnJ/TAnBWYAEA9LmesKo2m07Yv36spbMtmvLRsZbJ
+blwCdYHu6GlroVOQVMKtHydfxQ/lrx+ZnZ8xEQAAAABJRU5ErkJggg==

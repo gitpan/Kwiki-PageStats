@@ -1,4 +1,9 @@
 ---
+version: 0.06
+date: Tue Mar 28 18:06:43 PST 2006
+changes:
+- Add a logo from Henry Laxen
+---
 version: 0.05
 date: Tue Jun 12 23:15:53 PDT 2005
 changes:
